@@ -1,5 +1,8 @@
 pandas==3.0.2
+numpy
+scipy
 statsmodels==0.14.6
+linearmodels
 matplotlib==3.10.8
 seaborn==0.13.2
 wbgapi==1.0.14

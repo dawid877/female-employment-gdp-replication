@@ -7,3 +7,4 @@ matplotlib==3.10.8
 seaborn==0.13.2
 wbgapi==1.0.14
 pathlib==1.0.1
+requests

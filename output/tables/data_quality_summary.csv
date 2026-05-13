@@ -1,0 +1,7 @@
+country_code,country,start_year,end_year,observations,missing_lgdp,missing_lerf,missing_lup,missing_ltrd,missing_lfce
+BGR,Bulgaria,1992,2022,31,0,0,0,0,0
+CZE,Czechia,1992,2022,31,0,0,0,0,0
+GRC,Greece,1992,2022,31,0,0,0,0,0
+HUN,Hungary,1992,2022,31,0,0,0,0,0
+POL,Poland,1995,2022,28,0,0,0,0,0
+ROU,Romania,1992,2022,31,0,0,0,0,0

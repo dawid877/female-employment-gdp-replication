@@ -1,42 +1,116 @@
-# Evaluation of the Impact of Women's Employment on GDP in CEE Countries: A Replication of Toprak (2025)
-This repository supports a reproducible replication project on the relationship between women's employment and macroeconomic performance in Central and Eastern Europe. The project focuses on reproducing the empirical strategy described in `Women's unemployment.pdf` and adapting it to a transparent Python-based workflow suitable for collaborative research.
+# Evaluation of the Impact of Women's Employment on GDP in CEE Countries
 
-## Group Members
+## Authors
 
 - Dawid Grzesiak 473172
 - Kostiantyn Okhrimenko 473494
 - Zarina Khalilova 476692
 - Nyasha Nyarirangwe 474895
 
-## Research Question
+## What this repository reproduces
 
-To what extent did female employment rates affect GDP in Hungary, Czechia, Poland, Romania, Bulgaria, and Greece between 1992 and 2022?
+This repository reproduces the Python implementation of the Seemingly Unrelated Regression (SUR) analysis used for the project based on `Women's unemployment.pdf` by Asli Okay Toprak (2025). The study examines Hungary, Czechia, Poland, Romania, Bulgaria, and Greece over the 1992-2022 period, using GDP as the dependent variable and female employment, urban population, trade, and final consumption expenditure as explanatory variables.
 
-## Data Sources
+The current presentation-day run reproduces the modeling stage from the committed processed dataset in `data/processed/panel_data.csv`. A separate notebook-based workflow for collecting raw World Bank data is also included in the repository.
 
-The analysis will rely on World Bank Open Data indicators:
+## Paper and replication scope
+
+- Target paper: `Women's unemployment.pdf`
+- Econometric approach: SUR with country-specific equations
+- Main modeling entrypoint: `src/run_analysis.py`
+- Presentation helper: `run_demo.ps1`
+- Notes on paper-vs-repo differences: `REPLICATION_NOTES.md`
+- Preserved original proposal README: `Project_Proposal_Readme.md`
+
+## Data sources
+
+The repository uses World Bank indicators corresponding to the study:
 
 - GDP (constant 2015 US$): [NY.GDP.MKTP.KD](https://data.worldbank.org/indicator/NY.GDP.MKTP.KD)
-- Female Employment Ratio: [SL.TLF.CACT.FE.ZS](https://data.worldbank.org/indicator/SL.TLF.CACT.FE.ZS)
-- Urban Population: [SP.URB.TOTL.IN.ZS](https://data.worldbank.org/indicator/SP.URB.TOTL.IN.ZS)
+- Employment to population ratio, 15+, female (%), modeled ILO estimate: [SL.EMP.TOTL.SP.FE.ZS](https://data.worldbank.org/indicator/SL.EMP.TOTL.SP.FE.ZS)
+- Urban population (% of total population): [SP.URB.TOTL.IN.ZS](https://data.worldbank.org/indicator/SP.URB.TOTL.IN.ZS)
 - Trade (% of GDP): [NE.TRD.GNFS.ZS](https://data.worldbank.org/indicator/NE.TRD.GNFS.ZS)
-- Final Consumption Expenditure: [NE.CON.TOTL.KD](https://data.worldbank.org/indicator/NE.CON.TOTL.KD)
+- Final consumption expenditure (constant 2015 US$): [NE.CON.TOTL.KD](https://data.worldbank.org/indicator/NE.CON.TOTL.KD)
 
-## Planned Approach
+## Requirements
 
-We will replicate the Seemingly Unrelated Regression (SUR) framework described in `Women's unemployment.pdf` to estimate how female employment relates to GDP across the selected countries. The workflow will apply natural log transformations to the main variables, including `lgdp`, `lerf`, and related controls, to align the specification with the original econometric design and to address correlation across country-level error terms.
+- Python 3.13 was used for the validated run in this repository
+- Windows PowerShell commands are shown below
+- No external credentials are required for the current demo run because the processed dataset is already committed
 
-## Language
-Python
+## Quick demo run
 
-## Motivation
+From a freshly cloned repository, run:
 
-The project is motivated by two goals. First, it tests the "feminization U" theory in a regional CEE context by examining whether increases in women's employment are associated with economic growth. Second, it demonstrates how regional econometric modeling can be organized in a clean, reproducible research environment that supports collaboration, inspection, and re-execution.
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run_demo.ps1
+```
 
-## Repository Structure
+This script will:
 
-- `data/` stores raw data inputs and data-fetching scripts.
-- `src/` stores Python scripts for cleaning, transformation, and econometric analysis.
-- `output/` stores rendered figures, tables, and reports.
+1. Create a local virtual environment if one does not already exist
+2. Install the pinned Python dependencies
+3. Sync the committed logged dataset into the modeling input path
+4. Run the diagnostics, SUR model, paper comparison, and robustness scripts
 
+## Manual step-by-step run
 
+If you prefer to run the commands yourself:
+
+```powershell
+git clone https://github.com/dawid877/female-employment-gdp-replication.git
+cd female-employment-gdp-replication
+python -m venv .venv
+.\.venv\Scripts\python -m pip install -r requirements.txt
+.\.venv\Scripts\python src\sync_processed_data.py
+.\.venv\Scripts\python src\run_analysis.py
+```
+
+## Optional raw-data refresh
+
+The repository also contains a separate notebook for collecting raw World Bank data:
+
+- `data/collection_preprocessing.ipynb`
+
+That notebook writes logged data to `data/data/wdi_wide_logged.csv`. To align that notebook output with the modeling input expected by the analysis scripts, run:
+
+```powershell
+.\.venv\Scripts\python src\sync_processed_data.py
+```
+
+This keeps the modeling input `data/processed/panel_data.csv` synchronized without changing the original analysis scripts.
+
+## Expected outputs
+
+After a successful run, the main generated outputs are CSV tables in `output/tables/`:
+
+- `data_quality_summary.csv`
+- `vif_table.csv`
+- `jarque_bera.csv`
+- `residual_correlation_matrix.csv`
+- `breusch_pagan_residual_correlation.csv`
+- `sur_estimation_sample_summary.csv`
+- `sur_country_results.csv`
+- `female_employment_coefficients.csv`
+- `comparison_with_original_table6.csv`
+- `ols_vs_sur_female_employment.csv`
+- `balanced_vs_available_ols.csv`
+
+The repository also includes already committed figures in `data/visuals/`.
+
+## Expected runtime
+
+- First run with environment setup: usually a few minutes, depending on package download speed
+- Re-running the analysis after setup: roughly under one minute on the validated machine
+
+## Repository structure
+
+- `data/data/`: committed raw and logged World Bank tables
+- `data/processed/`: modeling-ready dataset used by the analysis scripts
+- `data/visuals/`: committed figures already produced for the project
+- `src/`: analysis scripts and small reproducibility helpers
+- `output/tables/`: generated result tables from the reproducible run
+
+## Reproducibility notes
+
+This repository intentionally keeps the existing analysis scripts intact and wraps them with small reproducibility helpers instead of rewriting the research code. The most important paper-vs-repo caveats, including the current estimation sample, are documented in `REPLICATION_NOTES.md`.

@@ -1,0 +1,2 @@
+test,statistic,p_value,interpretation
+Jarque-Bera,6.744211024414293,0.034317305716530036,reject_normality

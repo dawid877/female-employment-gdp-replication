@@ -1,0 +1,2 @@
+test,lm_statistic,df,p_value,interpretation
+Breusch-Pagan residual correlation,25.958713741667424,15.0,0.03845887884211541,evidence_of_cross_equation_correlation

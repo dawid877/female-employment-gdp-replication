@@ -18,7 +18,8 @@ The current presentation-day run reproduces the modeling stage from the committe
 - Target paper: `Women's unemployment.pdf`
 - Econometric approach: SUR with country-specific equations
 - Main modeling entrypoint: `src/run_analysis.py`
-- Presentation helper: `run_demo.ps1`
+- Data handoff helper: `src/sync_processed_data.py`
+- Validation helper: `scripts/smoke_test.py`
 - Notes on paper-vs-repo differences: `REPLICATION_NOTES.md`
 - Preserved original proposal README: `Project_Proposal_Readme.md`
 
@@ -36,6 +37,7 @@ The repository uses World Bank indicators corresponding to the study:
 
 - Python 3.13 was used for the validated run in this repository
 - Windows PowerShell commands are shown below
+- `virtualenv` is recommended for the isolated presentation-day environment
 - No external credentials are required for the current demo run because the processed dataset is already committed
 
 ## Quick demo run
@@ -43,15 +45,22 @@ The repository uses World Bank indicators corresponding to the study:
 From a freshly cloned repository, run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\run_demo.ps1
+git clone https://github.com/dawid877/female-employment-gdp-replication.git
+cd female-employment-gdp-replication
+python -m pip install --user virtualenv
+python -m virtualenv .venv
+.\.venv\Scripts\python -m pip install -r requirements.txt
+.\.venv\Scripts\python src\sync_processed_data.py
+.\.venv\Scripts\python src\run_analysis.py
 ```
 
-This script will:
+This sequence will:
 
-1. Create a local virtual environment if one does not already exist
-2. Install the pinned Python dependencies
-3. Sync the committed logged dataset into the modeling input path
-4. Run the diagnostics, SUR model, paper comparison, and robustness scripts
+1. Clone the repository into a fresh folder
+2. Create an isolated Python environment with `virtualenv`
+3. Install the pinned Python dependencies
+4. Sync the committed logged dataset into the modeling input path
+5. Run the diagnostics, SUR model, paper comparison, and robustness scripts
 
 ## Manual step-by-step run
 
@@ -60,11 +69,14 @@ If you prefer to run the commands yourself:
 ```powershell
 git clone https://github.com/dawid877/female-employment-gdp-replication.git
 cd female-employment-gdp-replication
-python -m venv .venv
+python -m pip install --user virtualenv
+python -m virtualenv .venv
 .\.venv\Scripts\python -m pip install -r requirements.txt
 .\.venv\Scripts\python src\sync_processed_data.py
 .\.venv\Scripts\python src\run_analysis.py
 ```
+
+This is the recommended presentation-day flow because it uses an isolated environment without depending on the built-in `venv` bootstrap.
 
 ## Optional raw-data refresh
 

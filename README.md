@@ -66,23 +66,6 @@ This sequence will:
 5. Run the diagnostics, SUR model, paper comparison, and robustness scripts
 6. Generate the reproducible visual outputs in `output/figures/`
 
-## Manual step-by-step run
-
-If you prefer to run the commands yourself:
-
-```powershell
-git clone https://github.com/dawid877/female-employment-gdp-replication.git
-cd female-employment-gdp-replication
-python -m pip install --user virtualenv
-python -m virtualenv .venv
-.\.venv\Scripts\python -m pip install -r requirements.txt
-.\.venv\Scripts\python src\sync_processed_data.py
-.\.venv\Scripts\python src\run_analysis.py
-.\.venv\Scripts\python scripts\create_visuals.py
-```
-
-This is the recommended presentation-day flow because it uses an isolated environment without depending on the built-in `venv` bootstrap.
-
 ## Optional raw-data refresh
 
 The repository also contains a separate notebook for collecting raw World Bank data:

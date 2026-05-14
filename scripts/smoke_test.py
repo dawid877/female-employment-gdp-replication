@@ -20,6 +20,13 @@ EXPECTED_OUTPUTS = [
     "balanced_vs_available_ols.csv",
 ]
 
+EXPECTED_FIGURES = [
+    "gdp_trends_by_country.png",
+    "female_employment_trends_by_country.png",
+    "female_employment_vs_gdp.png",
+    "correlation_matrix.png",
+]
+
 
 def run(script):
     subprocess.run([PYTHON, str(ROOT / script)], check=True)
@@ -28,15 +35,22 @@ def run(script):
 def main():
     run("src/sync_processed_data.py")
     run("src/run_analysis.py")
+    run("scripts/create_visuals.py")
 
     output_dir = ROOT / "output" / "tables"
     missing = [name for name in EXPECTED_OUTPUTS if not (output_dir / name).exists()]
 
+    figures_dir = ROOT / "output" / "figures"
+    missing_figures = [name for name in EXPECTED_FIGURES if not (figures_dir / name).exists()]
+
     if missing:
         raise FileNotFoundError(f"Smoke test failed. Missing outputs: {missing}")
+    if missing_figures:
+        raise FileNotFoundError(f"Smoke test failed. Missing figures: {missing_figures}")
 
     print("Smoke test passed.")
     print(f"Verified outputs in: {output_dir}")
+    print(f"Verified figures in: {figures_dir}")
 
 
 if __name__ == "__main__":
